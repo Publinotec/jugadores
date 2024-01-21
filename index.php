@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 
 // Verificar si la conexión está activa
 if (mysqli_ping($conn)) {
-    echo "Conexión activa.";
+    echo "Conexión activa.<br>";
 } else {
     echo "Conexión inactiva.";
 }
@@ -26,26 +26,19 @@ $result = $conn->query($sql);
 
 // Verificar si hay resultados
 if ($result->num_rows > 0) {
-    // Construir la tabla HTML
-    echo "<table border='1'>";
-    echo "<tr><th>ID</th><th>Nombre</th><th>Equipo</th><th>Posición</th><th>Categoría</th><th>Edad</th></tr>";
+    // Crear un array para almacenar los datos de los jugadores
+    $jugadores = array();
 
-    // Iterar sobre los resultados y agregar filas a la tabla
+    // Iterar sobre los resultados y agregar a array de jugadores
     while ($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . $row['id'] . "</td>";
-        echo "<td>" . $row['nombre'] . "</td>";
-        echo "<td>" . $row['equipo'] . "</td>";
-        echo "<td>" . $row['posicion'] . "</td>";
-        echo "<td>" . $row['categoria'] . "</td>";
-        echo "<td>" . $row['edad'] . "</td>";
-        echo "</tr>";
+        $jugadores[] = $row;
     }
 
-    echo "</table>";
+    // Devolver los jugadores en formato JSON
+    echo json_encode($jugadores);
 } else {
     // No se encontraron jugadores
-    echo "No se encontraron jugadores.";
+    echo json_encode(array('mensaje' => 'No se encontraron jugadores.'));
 }
 
 // Cerrar la conexión a la base de datos
